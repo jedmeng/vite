@@ -16,6 +16,7 @@ declare const __BASE__: string
 declare const __HMR_PROTOCOL__: string
 declare const __HMR_HOSTNAME__: string
 declare const __HMR_PORT__: string
+declare const __HMR_PATH__: string
 declare const __HMR_TIMEOUT__: number
 declare const __HMR_ENABLE_OVERLAY__: boolean
 
@@ -24,8 +25,10 @@ console.log('[vite] connecting...')
 // use server configuration, then fallback to inference
 const socketProtocol =
   __HMR_PROTOCOL__ || (location.protocol === 'https:' ? 'wss' : 'ws')
-const socketHost = `${__HMR_HOSTNAME__ || location.hostname}:${__HMR_PORT__}`
-const socket = new WebSocket(`${socketProtocol}://${socketHost}`, 'vite-hmr')
+const socketPort = 
+  __HMR_PORT__ || location.port || (location.protocol === 'https:' ? 443 : 80);
+const socketHost = __HMR_HOSTNAME__ || location.hostname
+const socket = new WebSocket(`${socketProtocol}://${socketHost}:${socketPort}${__HMR_PATH__}`, 'vite-hmr')
 const base = __BASE__ || '/'
 
 function warnFailedFetch(err: Error, path: string | string[]) {
